@@ -2,8 +2,8 @@ name: Fetch AROME forecast
 
 on:
   schedule:
-    - cron: '20 */3 * * *'   # toutes les 3h, à :20 (heure UTC)
-  workflow_dispatch:          # bouton "lancer manuellement" dans l'interface
+    - cron: '20 * * * *'   # toutes les heures, à :20
+  workflow_dispatch:
 
 jobs:
   fetch:
