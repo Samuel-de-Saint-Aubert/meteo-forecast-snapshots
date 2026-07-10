@@ -1,0 +1,31 @@
+name: Fetch AROME forecast
+
+on:
+  schedule:
+    - cron: '20 */3 * * *'   # toutes les 3h, à :20 (heure UTC)
+  workflow_dispatch:          # bouton "lancer manuellement" dans l'interface
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install requests
+
+      - run: python fetch_forecast.py
+
+      - name: Commit et push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "forecast $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push
